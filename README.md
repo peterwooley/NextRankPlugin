@@ -4,6 +4,8 @@ A plugin for Beat Saber that shows the number of points needed to get to the nex
 ## Installation
 *This plugin requires IPA which you will automatically get if you install [the Song Loader Plugin](https://github.com/xyonico/BeatSaberSongInjector/releases).*
 
+![Screenshot of the Beat Saber song details UI showing 941 points are needed to get to the next rank for the song Escape.](/relative/path/to/img.jpg?raw=true "941 points needed to get to the next rank")
+
 1. Make sure that Beat Saber is not running.
 2. Download the latest version of [`NextRankPlugin.dll`](https://github.com/peterwooley/NextRankPlugin/releases/latest)
 2. Extract the `NextRankPlugin.dll` into the `Beat Saber/Plugins folder`.  
