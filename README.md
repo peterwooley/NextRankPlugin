@@ -1,5 +1,5 @@
 # Next Rank Plugin
-A plugin for Beat Saber that shows the number of points needed to get to the next rank below your Highscore in the song detail view.
+A plugin for Beat Saber that shows the number of points needed to get to the next rank below your Highscore in the song detail view. As you work through the ranks to S or even SS, you'll now have a better idea of just how close you are.
 
 ![Screenshot of the Beat Saber song details UI showing 941 points are needed to get to the next rank for the song Escape.](/screenshot.jpg?raw=true "941 points needed to get to the next rank")
 
