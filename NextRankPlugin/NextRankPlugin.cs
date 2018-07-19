@@ -10,12 +10,12 @@ namespace NextRankPlugin
     {
 
         public string Name => "Next Rank";
-        public string Version => "1.0.0";
+        public string Version => "1.1.0";
 
         public const int MenuIndex = 1;
 
-        private SongSelectionMasterViewController _songSelectionView;
-        private SongDetailViewController _songDetailViewController;
+        private StandardLevelListViewController _songSelectionView;
+        private StandardLevelDetailViewController _songDetailViewController;
         private TMP_Text _highScoreText;
         private TMP_Text _nextRankText;
         private bool poll = false;
@@ -41,8 +41,8 @@ namespace NextRankPlugin
 
         public void SetupUI()
         {
-            _songDetailViewController = Resources.FindObjectsOfTypeAll<SongDetailViewController>().FirstOrDefault();
-            _songSelectionView = Resources.FindObjectsOfTypeAll<SongSelectionMasterViewController>().FirstOrDefault();
+            _songDetailViewController = Resources.FindObjectsOfTypeAll<StandardLevelDetailViewController>().FirstOrDefault();
+            _songSelectionView = Resources.FindObjectsOfTypeAll<StandardLevelListViewController>().FirstOrDefault();
             _highScoreText = ReflectionUtil.GetPrivateField<TMP_Text>(_songDetailViewController, "_highScoreText");
             
             _highScoreText.rectTransform.anchoredPosition = new Vector2(0, -1);
@@ -65,8 +65,8 @@ namespace NextRankPlugin
             if (!poll) return;
 
             // At launch, the UI exists, but no level is selected.
-            string levelId = ReflectionUtil.GetPrivateField<string>(_songSelectionView, "_levelId");
-            if (levelId == null) return;
+            StandardLevelSO.DifficultyBeatmap difficultyBeatMap = ReflectionUtil.GetPrivateField<StandardLevelSO.DifficultyBeatmap>(_songDetailViewController, "_difficultyLevel");
+            if (difficultyBeatMap == null) return;
 
             // If the player hasn't finished a level, blank out the Next Rank text to fit in with the rest of the UI.
             if (_highScoreText.text == "-")
@@ -75,13 +75,11 @@ namespace NextRankPlugin
                 return;
             }
 
-            LevelStaticData levelData = _songSelectionView.GetLevelStaticDataForSelectedSong();
-            LevelStaticData.Difficulty difficulty = ReflectionUtil.GetPrivateField<LevelStaticData.Difficulty>(_songDetailViewController, "_difficulty");
-            LevelStaticData.DifficultyLevel difficultyLevel = levelData.GetDifficultyLevel(difficulty);
-            GameplayMode gameplayMode = ReflectionUtil.GetPrivateField<GameplayMode>(_songSelectionView, "_gameplayMode");
-            PlayerLevelStatsData playerLevelStatsData = PersistentSingleton<GameDataModel>.instance.gameDynamicData.GetCurrentPlayerDynamicData().GetPlayerLevelStatsData(levelData.levelId, difficulty, gameplayMode);
-
-            _nextRankText.text = GetPointsToNextRank(difficultyLevel.songLevelData.songData.notesCount, playerLevelStatsData.highScore);
+            LevelDifficulty difficulty = difficultyBeatMap.difficulty;
+            int notesCount = difficultyBeatMap.beatmapData.notesCount;
+            GameplayMode gameplayMode = ReflectionUtil.GetPrivateField<GameplayMode>(_songDetailViewController, "_gameplayMode");
+            PlayerLevelStatsData playerLevelStatsData = PersistentSingleton<GameDataModel>.instance.gameDynamicData.GetCurrentPlayerDynamicData().GetPlayerLevelStatsData(difficultyBeatMap.level.levelID, difficulty, gameplayMode);
+            _nextRankText.text = GetPointsToNextRank(notesCount, playerLevelStatsData.highScore);
         }
 
         public string GetPointsToNextRank(int notes, int highScore)
