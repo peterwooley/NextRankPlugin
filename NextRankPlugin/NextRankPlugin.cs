@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using IllusionPlugin;
+using System;
 
 namespace NextRankPlugin
 {
@@ -84,18 +85,13 @@ namespace NextRankPlugin
 
         public string GetPointsToNextRank(int notes, int highScore)
         {
-            int maxPointsPerNote = 110;
-            int notesAt1x = 2;
-            int notesAt2x = 4;
-            int notesAt4x = 8;
-            int notesUnder8x = notesAt1x + notesAt2x + notesAt4x;
-            int pointsUnder8x = notesAt1x * maxPointsPerNote + notesAt2x * 2 * maxPointsPerNote + notesAt4x * 4 * maxPointsPerNote;
-            int pointScoreAt8x = maxPointsPerNote * 8;
-            int maxPoints = (notes - notesUnder8x) * pointScoreAt8x + pointsUnder8x;
-
-            double percent = (double)highScore / maxPoints;
-
+            int maxPoints = ScoreController.MaxScoreForNumberOfNotes(notes);
+            double percent = (double) highScore / maxPoints;
             double pointsToNextRank;
+
+            Console.WriteLine("Max Score:  " + maxPoints);
+            Console.WriteLine("High Score: " + highScore);
+
 
             if (percent <= 0.2f)
             {
