@@ -89,10 +89,6 @@ namespace NextRankPlugin
             double percent = (double) highScore / maxPoints;
             double pointsToNextRank;
 
-            Console.WriteLine("Max Score:  " + maxPoints);
-            Console.WriteLine("High Score: " + highScore);
-
-
             if (percent <= 0.2f)
             {
                 pointsToNextRank = (maxPoints * 0.2f) - highScore;
