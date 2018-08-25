@@ -1,9 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using IllusionPlugin;
-using System;
 
 namespace NextRankPlugin
 {
@@ -11,9 +11,9 @@ namespace NextRankPlugin
     {
 
         public string Name => "Next Rank";
-        public string Version => "1.1.0";
+        public string Version => "1.2.0";
 
-        public const int MenuIndex = 1;
+        public const string MenuName = "Menu";
 
         private StandardLevelListViewController _songSelectionView;
         private StandardLevelDetailViewController _songDetailViewController;
@@ -28,7 +28,7 @@ namespace NextRankPlugin
 
         public void SceneManagerOnActiveSceneChanged(Scene arg0, Scene scene)
         {
-            if (scene.buildIndex == MenuIndex)
+            if (scene.name == MenuName)
             {
                 SetupUI();
 
@@ -44,8 +44,7 @@ namespace NextRankPlugin
         {
             _songDetailViewController = Resources.FindObjectsOfTypeAll<StandardLevelDetailViewController>().FirstOrDefault();
             _songSelectionView = Resources.FindObjectsOfTypeAll<StandardLevelListViewController>().FirstOrDefault();
-            _highScoreText = ReflectionUtil.GetPrivateField<TMP_Text>(_songDetailViewController, "_highScoreText");
-            
+            _highScoreText = ReflectionUtil.GetPrivateField<TMP_Text>(_songDetailViewController, "_highScoreText"); 
             _highScoreText.rectTransform.anchoredPosition = new Vector2(0, -1);
 
             TMP_Text maxComboText = ReflectionUtil.GetPrivateField<TMP_Text>(_songDetailViewController, "_maxComboText");
