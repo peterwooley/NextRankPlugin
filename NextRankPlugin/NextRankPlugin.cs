@@ -11,11 +11,10 @@ namespace NextRankPlugin
     {
 
         public string Name => "Next Rank";
-        public string Version => "1.2.0";
+        public string Version => "1.3.0";
 
         public const string MenuName = "Menu";
 
-        private StandardLevelListViewController _songSelectionView;
         private StandardLevelDetailViewController _songDetailViewController;
         private TMP_Text _highScoreText;
         private TMP_Text _nextRankText;
@@ -43,7 +42,6 @@ namespace NextRankPlugin
         public void SetupUI()
         {
             _songDetailViewController = Resources.FindObjectsOfTypeAll<StandardLevelDetailViewController>().FirstOrDefault();
-            _songSelectionView = Resources.FindObjectsOfTypeAll<StandardLevelListViewController>().FirstOrDefault();
             _highScoreText = ReflectionUtil.GetPrivateField<TMP_Text>(_songDetailViewController, "_highScoreText"); 
             _highScoreText.rectTransform.anchoredPosition = new Vector2(0, -1);
 
@@ -65,7 +63,7 @@ namespace NextRankPlugin
             if (!poll) return;
 
             // At launch, the UI exists, but no level is selected.
-            StandardLevelSO.DifficultyBeatmap difficultyBeatMap = ReflectionUtil.GetPrivateField<StandardLevelSO.DifficultyBeatmap>(_songDetailViewController, "_difficultyLevel");
+            LevelSO.DifficultyBeatmap difficultyBeatMap = ReflectionUtil.GetPrivateField<LevelSO.DifficultyBeatmap>(_songDetailViewController, "_difficultyBeatmap");
             if (difficultyBeatMap == null) return;
 
             // If the player hasn't finished a level, blank out the Next Rank text to fit in with the rest of the UI.
@@ -75,10 +73,10 @@ namespace NextRankPlugin
                 return;
             }
 
-            LevelDifficulty difficulty = difficultyBeatMap.difficulty;
+            BeatmapDifficulty difficulty = difficultyBeatMap.difficulty;
             int notesCount = difficultyBeatMap.beatmapData.notesCount;
-            GameplayMode gameplayMode = ReflectionUtil.GetPrivateField<GameplayMode>(_songDetailViewController, "_gameplayMode");
-            PlayerLevelStatsData playerLevelStatsData = PersistentSingleton<GameDataModel>.instance.gameDynamicData.GetCurrentPlayerDynamicData().GetPlayerLevelStatsData(difficultyBeatMap.level.levelID, difficulty, gameplayMode);
+            PlayerDataModelSO.LocalPlayer player = ReflectionUtil.GetPrivateField<PlayerDataModelSO.LocalPlayer>(_songDetailViewController, "_player");
+            PlayerLevelStatsData playerLevelStatsData = player.GetPlayerLevelStatsData(difficultyBeatMap.level.levelID, difficulty);
             _nextRankText.text = GetPointsToNextRank(notesCount, playerLevelStatsData.highScore);
         }
 
